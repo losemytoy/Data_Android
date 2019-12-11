@@ -100,7 +100,7 @@ def crow_last(keyword,n):
     datas = html1.xpath('//li[contains(@class,"gl-item")]')
     with open('JD_DATA.csv', 'a', newline='', encoding='utf-8')as f:
         write = csv.writer(f)
-        write.writerow(['商品名', '价格', '图片'])
+        # write.writerow(['商品名', '价格', '图片'])
         p_pic = []
         for data in datas:
             detail_url = ''.join(data.xpath('.//div[@class="gl-i-wrap"]/div[1]/a/@href'))
@@ -138,11 +138,14 @@ def crow_last(keyword,n):
             write.writerow([p_name[0].xpath('string(.)'), p_price[0],p_pic])
     f.close()
 
+
+    # 数据库存储
+
 def Save_Database():
     # -*- coding:utf-8 -*-
 
     # 数据库连接
-    conn = pymssql.connect(host='127.0.0.1', user='sa', password='123456', database='JD_Data')
+    conn = pymssql.connect(host='127.0.0.1', user='sa', password='123456', database='guzzi')#此处为数据库信息，更改数据库需修改
 
     # 打开游标
     cur = conn.cursor();
@@ -151,10 +154,10 @@ def Save_Database():
         raise Exception('数据库连接失败！')
 
     # 4.修改数据
-
     reader = csv.reader(open(r'JD_DATA.csv', 'r',encoding='utf-8'))
     for item in reader:
-        script = "insert into Product(ProName,Price,Img_url) values ('{0}','{1}','{2}')".format(item[0], item[1],item[2])
+        # script = "insert into Product(ProName,Price,Img_url) values ('{0}','{1}','{2}')".format(item[0], item[1],item[2])#此处为数据表信息，更改数据表 需修改
+        script = "insert into goods(goodsname,goodsprice,imgurl) values ('{0}','{1}','{2}')".format(item[0], item[1], item[2])
         cur.execute(script)
 
     conn.commit()  # 修改数据後提交事务
